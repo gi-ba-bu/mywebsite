@@ -23,7 +23,7 @@ interests:
  - Statistics
  - Data Science
  - R
- - Marketing, UX and CEO
+ - Marketing, UX and SEO
  - Education and teaching
 
 social:
