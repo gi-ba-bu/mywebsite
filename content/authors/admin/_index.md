@@ -15,7 +15,7 @@ education:
     institution: University of Padua, Italy
     year: 2011
     
-email: 'baldogiacomo@gmail.com'
+email: ' '
 highlight_name: false
 
 interests:
@@ -26,15 +26,15 @@ interests:
  - Marketing, UX and SEO
  - Education and teaching
 
-social:
-- display:
-   header: false
-- icon: envelope
-  icon_pack: fas
-  link: "mailto:baldogiacomophd@gmail.com"
-- icon: linkedin
-  icon_pack: fab
-  link: https://www.linkedin.com/in/giacomo-baldo/
+social: 
+ #- display:
+ #   header: false
+ # - icon: envelope
+ #  icon_pack: fas
+ #  link: "mailto:baldogiacomophd@gmail.com"
+ # - icon: linkedin
+ #  icon_pack: fab
+ #  link: https://www.linkedin.com/in/giacomo-baldo/
 superuser: true
 title: Giacomo Baldo
 ---
