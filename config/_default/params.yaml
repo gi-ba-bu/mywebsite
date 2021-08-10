@@ -7,7 +7,7 @@
 
 theme: Coffee
 day_night: true
-font: Native
+font: my_font_set
 font_size: L
 
 # SEO

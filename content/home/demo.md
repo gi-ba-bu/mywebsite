@@ -15,14 +15,15 @@ weight: 1
 design:
   spacing:
     # Customize the section spacing. Order is top, right, bottom, left.
-    padding: ["50px", "0", "50px", "0"]
+    padding: ["50px", "0px", "50px", "0px"]
+    
 
-advanced:
-  css_style: ''
 
 ---
 
-My name is **Giacomo**. Last thing first, I earned my PhD from the [School of Mathematics](https://eps.leeds.ac.uk/maths-research-innovation) at the University of Leeds (UK) in 2021. In my [research](https://etheses.whiterose.ac.uk/28836/), I was interested in analytical modelling of group behavior. Among my current interests are data science and mathematics communication. I am also a qualified secondary school teacher in the UK and former mathematics teacher.
+My name is **Giacomo**.  
+
+Last thing first, I earned my PhD from the [School of Mathematics](https://eps.leeds.ac.uk/maths-research-innovation) at the University of Leeds (UK) in 2021. In my [research](https://etheses.whiterose.ac.uk/28836/), I was interested in analytical modelling of group behavior. Among my current interests are data science and mathematics communication. I am also a qualified secondary school teacher in the UK and former mathematics teacher.
 
 <!--- [Explore similar templates](https://wowchemy.com/templates/)
 
