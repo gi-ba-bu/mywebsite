@@ -4,7 +4,7 @@
 widget: blank
 
 # Activate this widget? true/false
-active: false
+active: true
 
 # This file represents a page section.
 headless: true
@@ -15,19 +15,8 @@ weight: 1
 title: 
 subtitle:
 
-design:
-  columns: "1"
-  background:
-    image: hello.jpg
-    image_darken: false
-    image_parallax: true
-    image_position: left
-    image_size: cover
-    text_color_light: false
-  spacing:
-    padding: ["300px", "0", "200px", "0"]
 ---
-
+My name is Giacomo. Last thing first, I earned my PhD from the [School of Mathematics](https://eps.leeds.ac.uk/maths-research-innovation) at the University of Leeds (UK) in 2021. In my [research](https://etheses.whiterose.ac.uk/28836/), I was interested in analytical modelling of group behavior. Among my current interests are data science and mathematics communication. Not so long ago, I trained as a maths teacher and taught in school for two years. 
 <!--- [Explore similar templates](https://wowchemy.com/templates/)
 
 **Over 500,000 [Amazing Websites](https://wowchemy.com/) have Already Been Built with Wowchemy**

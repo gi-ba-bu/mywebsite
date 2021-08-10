@@ -5,7 +5,7 @@
 
 main:
   - name: about me
-    url: '#about'
+    url: '#demo'
     weight: 10
   - name: posts
     url: '#posts'
