@@ -3,18 +3,25 @@ title: Learning Python
 summary: Getting started
 author: 'Giacomo Baldo'
 date: '2021-08-05'
-slug: hi-world
-categories: ["R"]
-tags: ["R","blogdown"]
+slug: ''
+categories: ["Python"]
+tags: ["Python"]
 image:
   caption: ''
   focal_point: ''
   preview_only: no
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, highlight = TRUE)
+```
 
 <style>
 pre {
+  border: 1px solid #898989;
+  background-color: #ffffff;
+  color: #036;
   font-size: 18px;
+  font-weight: bold;
   padding: 1rem;
   
 }
@@ -24,8 +31,11 @@ pre {
 library('reticulate')
 ```
 
-## For now, I am building this page as a random collection of things I learnt about Python. At the same time, I am trying to find out the best way to display code from Rmarkdown.
+## For now, I am building this page for fun as a random collection of things I learnt about Python. At the same time, I am trying to find out the best way to display code from Rmarkdown.
+
+For Rmarkdown fans, how cool, I'm showing the Python code and its output (the line starting with ##) by including the code directly into the Rmarkdown file. In other words, the Python output has been obtained while compiling this document. 
 &nbsp;  
+
  - An **if** cycle with the **elif** option. First, I assign the value 6 to the variable x.
 ```{python}
 x = 6
@@ -36,5 +46,6 @@ elif x < 10 :
 else :
     print('large')
 ```
-- On Python 3, a **division** output is always a **float** type number even if all numbers involved are integers. Here is an example in which code is compiled using the package Hydrogen in the text editor ATOM. Hydrogen allows to display in-line output. 
+
+- On Python 3, a **division** output is always a **float** type number even if all numbers involved are integers. Here is an example in which code is compiled using the Hydrogen package in ATOM (text editor)         . Hydrogen allows to display in-line output. 
 ![screen reader text](division.png "Output using Hydrogen on Atom.")
