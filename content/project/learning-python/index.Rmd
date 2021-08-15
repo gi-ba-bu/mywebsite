@@ -47,5 +47,14 @@ else :
     print('large')
 ```
 
-- On Python 3, a **division** output is always a **float** type number even if all numbers involved are integers. Here is an example in which code is compiled using the Hydrogen package in ATOM (text editor)         . Hydrogen allows to display in-line output. 
+- On Python 3, a **division** output is always a **float** type number even if all numbers involved are integers. 
+```{python}
+length = 50
+width = length/2
+print(type(length))
+print(width)
+print(type(width))
+```
+
+Here is the same code compiled using the Hydrogen package in ATOM (text editor). Hydrogen allows to display in-line output. 
 ![screen reader text](division.png "Output using Hydrogen on Atom.")
