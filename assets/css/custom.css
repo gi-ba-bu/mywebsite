@@ -19,13 +19,14 @@ h1, h2, h3 {
 }
 
 
+
+/* this doesn't seem to be working code font size */
 .hljs { /* code font size */
-font-size: 24px;
+font-size: 18px;
 padding: 1rem;
 }
 
-
-
+ 
 /* --------Blog posts--------- */
 /* Headers within blogs */
 

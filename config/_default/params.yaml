@@ -82,11 +82,11 @@ address_format: en-us
 
 # Site features
 
-highlight: true
+highlight: false
 highlight_languages:
-  - r
-  - python
-  - latex
+   # - r
+   # - python
+   # - latex
 math: false
 diagram: false
 privacy_pack: false

@@ -1,0 +1,40 @@
+---
+title: Learning Python
+summary: Getting started
+author: 'Giacomo Baldo'
+date: '2021-08-05'
+slug: hi-world
+categories: ["R"]
+tags: ["R","blogdown"]
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+---
+
+<style>
+pre {
+  font-size: 18px;
+  padding: 1rem;
+  
+}
+</style>
+
+```{r, echo=FALSE}
+library('reticulate')
+```
+
+## For now, I am building this page as a random collection of things I learnt about Python. At the same time, I am trying to find out the best way to display code from Rmarkdown.
+&nbsp;  
+ - An **if** cycle with the **elif** option. First, I assign the value 6 to the variable x.
+```{python}
+x = 6
+if x < 2 :
+    print('tiny')
+elif x < 10 :
+    print('medium')
+else :
+    print('large')
+```
+- On Python 3, a **division** output is always a **float** type number even if all numbers involved are integers. Here is an example in which code is compiled using the package Hydrogen in the text editor ATOM. Hydrogen allows to display in-line output. 
+![screen reader text](division.png "Output using Hydrogen on Atom.")
