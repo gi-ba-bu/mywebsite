@@ -19,7 +19,7 @@ h1, h2, h3 {
 }
 
 
-.hljs-code { /* code font size */
+.hljs { /* code font size */
 font-size: 24px;
 padding: 1rem;
 }
