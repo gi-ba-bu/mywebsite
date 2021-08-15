@@ -12,7 +12,7 @@ image:
   preview_only: no
 ---
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(message = FALSE, warning = FALSE, highlight = TRUE)
+knitr::opts_chunk$set(hold = TRUE ) 
 ```
 
 <style>
@@ -48,7 +48,7 @@ else :
 ```
 
 - On Python 3, a **division** output is always a **float** type number even if all numbers involved are integers. 
-```{python}
+```{python, collapse = TRUE}
 length = 50
 width = length/2
 print(type(length))
