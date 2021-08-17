@@ -1,0 +1,32 @@
+ /* code chunks layout */
+pre {
+  border: 1px solid #898989;
+  background-color: #ffffff;
+  color: #036;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 1rem;
+  
+}
+
+/* tables layout, not sure if it holds for dataframes */
+th, td {
+  text-align: left;
+  padding: 1px;
+}
+
+/* stripes on tables */
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+/* collapse borders and then add bottom border to cells */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border-bottom: 1px solid #ddd;
+}
+
+
+

@@ -1,0 +1,55 @@
+---
+title: R for Data Science
+summary: Getting started
+author: 'Giacomo Baldo'
+date: '2021-08-17'
+slug: ''
+categories: ["R"]
+tags: ["R", "Data Science"]
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+output:
+  blogdown::html_page:
+    df_print: kable  #kable, tibble, and paged are also options
+---
+ 
+```{r include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning=FALSE)
+```
+
+```{r, include=FALSE,  warning=FALSE}
+#library(lubridate)         # for working with dates
+#library(palmerpenguins)    # for palmer penguin data
+#library(remotes)         # for installing package from GitHub
+#remotes::install_github("llendway/gardenR") # run if package is not already installed
+#library(gardenR)           # for Lisa's garden data
+#theme_set(theme_minimal()) # my favorite ggplot theme
+```
+
+# Using <mark>ggplot()</mark> and <mark>dplyr</mark >
+
+In this section I use data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control.
+ 
+```{r}
+library(tidyverse)         # for graphing and data cleaning
+library(kableExtra)        # for better tables
+
+#read the Dataset sheet into “R”. The dataset will be called "data".
+data <- read.csv("https://opendata.ecdc.europa.eu/covid19/nationalcasedeath_eueea_daily_ei/csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+
+#extract cumulative deaths and cases for each EU country for which data is available
+q <- data %>% 
+  group_by(countriesAndTerritories) %>% 
+  summarize(deaths = sum(deaths),
+            cases = sum(cases)) %>% 
+  arrange(desc(deaths))
+
+# plot the table
+kbl(q) %>%
+   kable_styling(bootstrap_options = c("responsive"))
+```
+ 
+ 
+ 

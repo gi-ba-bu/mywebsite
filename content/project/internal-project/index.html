@@ -1,0 +1,389 @@
+---
+title: R for Data Science
+summary: Getting started
+author: 'Giacomo Baldo'
+date: '2021-08-17'
+slug: ''
+categories: ["R"]
+tags: ["R", "Data Science"]
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+output:
+  blogdown::html_page:
+    df_print: kable  #kable, tibble, and paged are also options
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<div id="using-ggplot-and-dplyr" class="section level1">
+<h1>Using <mark>ggplot()</mark> and <mark>dplyr</mark ></h1>
+<p>In this section I use data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control.</p>
+<pre class="r"><code>library(tidyverse)         # for graphing and data cleaning
+library(kableExtra)        # for better tables
+
+#read the Dataset sheet into “R”. The dataset will be called &quot;data&quot;.
+data &lt;- read.csv(&quot;https://opendata.ecdc.europa.eu/covid19/nationalcasedeath_eueea_daily_ei/csv&quot;, na.strings = &quot;&quot;, fileEncoding = &quot;UTF-8-BOM&quot;)
+
+#extract cumulative deaths and cases for each EU country for which data is available
+q &lt;- data %&gt;% 
+  group_by(countriesAndTerritories) %&gt;% 
+  summarize(deaths = sum(deaths),
+            cases = sum(cases)) %&gt;% 
+  arrange(desc(deaths))
+
+# plot the table
+kbl(q) %&gt;%
+   kable_styling(bootstrap_options = c(&quot;responsive&quot;))</code></pre>
+<table class="table table-responsive" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+countriesAndTerritories
+</th>
+<th style="text-align:right;">
+deaths
+</th>
+<th style="text-align:right;">
+cases
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Italy
+</td>
+<td style="text-align:right;">
+128456
+</td>
+<td style="text-align:right;">
+4444338
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+France
+</td>
+<td style="text-align:right;">
+112798
+</td>
+<td style="text-align:right;">
+6476864
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Germany
+</td>
+<td style="text-align:right;">
+91899
+</td>
+<td style="text-align:right;">
+3827051
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Spain
+</td>
+<td style="text-align:right;">
+82595
+</td>
+<td style="text-align:right;">
+4719266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Poland
+</td>
+<td style="text-align:right;">
+75299
+</td>
+<td style="text-align:right;">
+2885461
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Romania
+</td>
+<td style="text-align:right;">
+34353
+</td>
+<td style="text-align:right;">
+1087509
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Czechia
+</td>
+<td style="text-align:right;">
+30376
+</td>
+<td style="text-align:right;">
+1676518
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hungary
+</td>
+<td style="text-align:right;">
+30042
+</td>
+<td style="text-align:right;">
+810549
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Belgium
+</td>
+<td style="text-align:right;">
+25299
+</td>
+<td style="text-align:right;">
+1154784
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bulgaria
+</td>
+<td style="text-align:right;">
+18376
+</td>
+<td style="text-align:right;">
+434535
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Netherlands
+</td>
+<td style="text-align:right;">
+17915
+</td>
+<td style="text-align:right;">
+1904128
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Portugal
+</td>
+<td style="text-align:right;">
+17573
+</td>
+<td style="text-align:right;">
+1004470
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sweden
+</td>
+<td style="text-align:right;">
+14658
+</td>
+<td style="text-align:right;">
+1110147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Greece
+</td>
+<td style="text-align:right;">
+13237
+</td>
+<td style="text-align:right;">
+539337
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Slovakia
+</td>
+<td style="text-align:right;">
+12544
+</td>
+<td style="text-align:right;">
+779951
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Austria
+</td>
+<td style="text-align:right;">
+10558
+</td>
+<td style="text-align:right;">
+664998
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Croatia
+</td>
+<td style="text-align:right;">
+8285
+</td>
+<td style="text-align:right;">
+367068
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ireland
+</td>
+<td style="text-align:right;">
+5059
+</td>
+<td style="text-align:right;">
+326188
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Slovenia
+</td>
+<td style="text-align:right;">
+4764
+</td>
+<td style="text-align:right;">
+261804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lithuania
+</td>
+<td style="text-align:right;">
+4458
+</td>
+<td style="text-align:right;">
+290766
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Latvia
+</td>
+<td style="text-align:right;">
+2563
+</td>
+<td style="text-align:right;">
+140171
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Denmark
+</td>
+<td style="text-align:right;">
+2560
+</td>
+<td style="text-align:right;">
+331736
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Estonia
+</td>
+<td style="text-align:right;">
+1281
+</td>
+<td style="text-align:right;">
+137514
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Finland
+</td>
+<td style="text-align:right;">
+1003
+</td>
+<td style="text-align:right;">
+117982
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Luxembourg
+</td>
+<td style="text-align:right;">
+828
+</td>
+<td style="text-align:right;">
+74690
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Norway
+</td>
+<td style="text-align:right;">
+809
+</td>
+<td style="text-align:right;">
+144478
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cyprus
+</td>
+<td style="text-align:right;">
+461
+</td>
+<td style="text-align:right;">
+109253
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Malta
+</td>
+<td style="text-align:right;">
+431
+</td>
+<td style="text-align:right;">
+35380
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Liechtenstein
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:right;">
+3175
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Iceland
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+9578
+</td>
+</tr>
+</tbody>
+</table>
+</div>
