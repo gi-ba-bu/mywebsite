@@ -22,11 +22,11 @@ output:
 
 <div id="using-ggplot-and-dplyr" class="section level1">
 <h1>Using <mark>ggplot()</mark> and <mark>dplyr</mark ></h1>
-<p>In this section I use data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control.</p>
+<p>In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers are usually up to date.</p>
 <pre class="r"><code>library(tidyverse)         # for graphing and data cleaning
 library(kableExtra)        # for better tables
 
-#read the Dataset sheet into “R”. The dataset will be called &quot;data&quot;.
+#read the dataset into “R”. The dataset will be called &quot;data&quot;.
 data &lt;- read.csv(&quot;https://opendata.ecdc.europa.eu/covid19/nationalcasedeath_eueea_daily_ei/csv&quot;, na.strings = &quot;&quot;, fileEncoding = &quot;UTF-8-BOM&quot;)
 
 #extract cumulative deaths and cases for each EU country for which data is available
