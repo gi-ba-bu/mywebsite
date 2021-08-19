@@ -30,27 +30,101 @@ knitr::opts_chunk$set(message = FALSE, warning=FALSE)
 
 # Using <mark>ggplot()</mark> and <mark>dplyr</mark >
 
-In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers are usually up to date.
- 
+In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control (ECDC) website. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers are usually up to date.
+
+Before reading on, ask yourself "which EU country was the hardest hit by Covid-19?". 
+&nbsp;
+
+## Cumulative deaths and cases for each country.
+We look at the total number of deaths for each country for which data is available from the ECDC. First, the data is displayed in a table. Below the table, the same data is displayed in a bar plot.
+
 ```{r}
 library(tidyverse)         # for graphing and data cleaning
 library(kableExtra)        # for better tables
+library(scales)
 
 #read the dataset into “R”. The dataset will be called "data".
-data <- read.csv("https://opendata.ecdc.europa.eu/covid19/nationalcasedeath_eueea_daily_ei/csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+data <- read.csv("covid-data.csv")
 
 #extract cumulative deaths and cases for each EU country for which data is available
 q <- data %>% 
-  group_by(countriesAndTerritories) %>% 
+  group_by(countries) %>% 
   summarize(deaths = sum(deaths),
             cases = sum(cases)) %>% 
   arrange(desc(deaths))
 
-# plot the table
+#plot the table
 kbl(q) %>%
    kable_styling(bootstrap_options = c("responsive"))
+
+q$countries <- factor(q$countries, levels = q$countries[order(q$deaths)])
+
+z <- ggplot(data = q, mapping = aes(x = deaths, y = countries)) +
+  geom_bar(stat='identity') +
+  theme_light() +
+  theme(panel.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"), plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA")) +
+  scale_x_continuous(name = "Cumulative deaths", labels = comma)
+
+z
+```
+  
+## Deaths per million inhabitants
+Although Italy was the hardest hit by the virus in absolute values, it was not in terms of deaths per million. The next plot shows this. 
+```{r}
+library(tidyverse)
+library(kableExtra)
+library(scales)
+
+data <- read.csv("covid-data.csv")
+
+q <-  data %>% 
+  group_by(countries,population) %>% 
+  summarize(deaths = sum(deaths))
+
+q <- tibble(countries = q$countries, deaths_pm = q$deaths/q$population*1000000) %>%
+  arrange(desc(deaths_pm)) 
+
+q$countries <- factor(q$countries, levels = q$countries[order(q$deaths_pm)])
+
+#create a bar plot of the data above
+z <- ggplot(data = q, mapping = aes(x = deaths_pm, y = countries)) +
+  geom_bar(stat='identity') +
+  theme_light() +
+  theme(panel.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"), plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA")) +
+  scale_x_continuous(name = "Deaths per million people", labels = comma)
+
+#show the plot
+z
 ```
 
+## Deaths per million people as a function of per capita GDP
+Finally, a trend seems to emerge in which countries with a low per-capita GDP tend to having more deaths per million people.
+```{r}
+library(tidyverse)
+library(kableExtra)
+library(scales)
+library(ggrepel)
 
- 
+data <- read.csv("covid-data.csv")
+gdp_data <- read.csv("gdp-europe.csv")
+merged_data <- merge(data, gdp_data, by = "countries")
+
+q <- merged_data %>% 
+  group_by(countries,gdp_pp,population) %>% 
+  summarize(deaths = sum(deaths))
+
+q <- tibble(countries = q$countries, gdp_pp = q$gdp_pp, deaths_pm = q$deaths/q$population*1000000)
+
+t = ggplot(data = q, mapping = aes(x = gdp_pp, y = deaths_pm)) +
+  geom_point() + 
+  geom_text_repel(aes(label=countries)) +
+  theme_light() +
+  scale_x_continuous(name = "GDP per capita (€)") +
+  scale_y_continuous(name = "Deaths per million people", labels = comma) +
+  theme(panel.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"), plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"))
+
+t 
+```
+
+Thank you for having a look at this page. I'll probably be adding to this analysis in the near future. 
  

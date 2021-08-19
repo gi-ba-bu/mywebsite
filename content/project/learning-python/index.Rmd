@@ -15,17 +15,6 @@ image:
 knitr::opts_chunk$set(hold = TRUE ) 
 ```
 
-<style>
-pre {
-  border: 1px solid #898989;
-  background-color: #ffffff;
-  color: #036;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 1rem;
-  
-}
-</style>
 
 ```{r, echo=FALSE}
 library('reticulate')

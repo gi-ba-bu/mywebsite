@@ -22,28 +22,34 @@ output:
 
 <div id="using-ggplot-and-dplyr" class="section level1">
 <h1>Using <mark>ggplot()</mark> and <mark>dplyr</mark ></h1>
-<p>In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers are usually up to date.</p>
+<p>In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control (ECDC) website. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers are usually up to date.</p>
+<p>Before reading on, ask yourself “which EU country was the hardest hit by Covid-19?”.
+ </p>
+<div id="cumulative-deaths-and-cases-for-each-country." class="section level2">
+<h2>Cumulative deaths and cases for each country.</h2>
+<p>We look at the total number of deaths for each country for which data is available from the ECDC. First, the data is displayed in a table. Below the table, the same data is displayed in a bar plot.</p>
 <pre class="r"><code>library(tidyverse)         # for graphing and data cleaning
 library(kableExtra)        # for better tables
+library(scales)
 
 #read the dataset into “R”. The dataset will be called &quot;data&quot;.
-data &lt;- read.csv(&quot;https://opendata.ecdc.europa.eu/covid19/nationalcasedeath_eueea_daily_ei/csv&quot;, na.strings = &quot;&quot;, fileEncoding = &quot;UTF-8-BOM&quot;)
+data &lt;- read.csv(&quot;covid-data.csv&quot;)
 
 #extract cumulative deaths and cases for each EU country for which data is available
 q &lt;- data %&gt;% 
-  group_by(countriesAndTerritories) %&gt;% 
+  group_by(countries) %&gt;% 
   summarize(deaths = sum(deaths),
             cases = sum(cases)) %&gt;% 
   arrange(desc(deaths))
 
-# plot the table
+#plot the table
 kbl(q) %&gt;%
    kable_styling(bootstrap_options = c(&quot;responsive&quot;))</code></pre>
 <table class="table table-responsive" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
-countriesAndTerritories
+countries
 </th>
 <th style="text-align:right;">
 deaths
@@ -59,10 +65,10 @@ cases
 Italy
 </td>
 <td style="text-align:right;">
-128456
+128510
 </td>
 <td style="text-align:right;">
-4444338
+4449606
 </td>
 </tr>
 <tr>
@@ -70,10 +76,10 @@ Italy
 France
 </td>
 <td style="text-align:right;">
-112798
+112943
 </td>
 <td style="text-align:right;">
-6476864
+6504978
 </td>
 </tr>
 <tr>
@@ -81,10 +87,10 @@ France
 Germany
 </td>
 <td style="text-align:right;">
-91899
+91921
 </td>
 <td style="text-align:right;">
-3827051
+3835375
 </td>
 </tr>
 <tr>
@@ -92,10 +98,10 @@ Germany
 Spain
 </td>
 <td style="text-align:right;">
-82595
+82739
 </td>
 <td style="text-align:right;">
-4719266
+4733602
 </td>
 </tr>
 <tr>
@@ -103,10 +109,10 @@ Spain
 Poland
 </td>
 <td style="text-align:right;">
-75299
+75306
 </td>
 <td style="text-align:right;">
-2885461
+2885676
 </td>
 </tr>
 <tr>
@@ -114,10 +120,10 @@ Poland
 Romania
 </td>
 <td style="text-align:right;">
-34353
+34359
 </td>
 <td style="text-align:right;">
-1087509
+1088053
 </td>
 </tr>
 <tr>
@@ -125,10 +131,10 @@ Romania
 Czechia
 </td>
 <td style="text-align:right;">
-30376
+30378
 </td>
 <td style="text-align:right;">
-1676518
+1676817
 </td>
 </tr>
 <tr>
@@ -136,10 +142,10 @@ Czechia
 Hungary
 </td>
 <td style="text-align:right;">
-30042
+30045
 </td>
 <td style="text-align:right;">
-810549
+810658
 </td>
 </tr>
 <tr>
@@ -150,7 +156,7 @@ Belgium
 25299
 </td>
 <td style="text-align:right;">
-1154784
+1156525
 </td>
 </tr>
 <tr>
@@ -158,10 +164,10 @@ Belgium
 Bulgaria
 </td>
 <td style="text-align:right;">
-18376
+18395
 </td>
 <td style="text-align:right;">
-434535
+435940
 </td>
 </tr>
 <tr>
@@ -169,10 +175,10 @@ Bulgaria
 Netherlands
 </td>
 <td style="text-align:right;">
-17915
+17920
 </td>
 <td style="text-align:right;">
-1904128
+1906434
 </td>
 </tr>
 <tr>
@@ -180,10 +186,10 @@ Netherlands
 Portugal
 </td>
 <td style="text-align:right;">
-17573
+17584
 </td>
 <td style="text-align:right;">
-1004470
+1006588
 </td>
 </tr>
 <tr>
@@ -191,10 +197,10 @@ Portugal
 Sweden
 </td>
 <td style="text-align:right;">
-14658
+14659
 </td>
 <td style="text-align:right;">
-1110147
+1112958
 </td>
 </tr>
 <tr>
@@ -202,10 +208,10 @@ Sweden
 Greece
 </td>
 <td style="text-align:right;">
-13237
+13253
 </td>
 <td style="text-align:right;">
-539337
+543749
 </td>
 </tr>
 <tr>
@@ -227,7 +233,7 @@ Austria
 10558
 </td>
 <td style="text-align:right;">
-664998
+665862
 </td>
 </tr>
 <tr>
@@ -235,10 +241,10 @@ Austria
 Croatia
 </td>
 <td style="text-align:right;">
-8285
+8288
 </td>
 <td style="text-align:right;">
-367068
+367409
 </td>
 </tr>
 <tr>
@@ -249,7 +255,7 @@ Ireland
 5059
 </td>
 <td style="text-align:right;">
-326188
+327684
 </td>
 </tr>
 <tr>
@@ -260,7 +266,7 @@ Slovenia
 4764
 </td>
 <td style="text-align:right;">
-261804
+262190
 </td>
 </tr>
 <tr>
@@ -268,10 +274,10 @@ Slovenia
 Lithuania
 </td>
 <td style="text-align:right;">
-4458
+4461
 </td>
 <td style="text-align:right;">
-290766
+291412
 </td>
 </tr>
 <tr>
@@ -279,10 +285,10 @@ Lithuania
 Latvia
 </td>
 <td style="text-align:right;">
-2563
+2565
 </td>
 <td style="text-align:right;">
-140171
+140325
 </td>
 </tr>
 <tr>
@@ -290,10 +296,10 @@ Latvia
 Denmark
 </td>
 <td style="text-align:right;">
-2560
+2562
 </td>
 <td style="text-align:right;">
-331736
+332622
 </td>
 </tr>
 <tr>
@@ -304,7 +310,7 @@ Estonia
 1281
 </td>
 <td style="text-align:right;">
-137514
+137800
 </td>
 </tr>
 <tr>
@@ -312,10 +318,10 @@ Estonia
 Finland
 </td>
 <td style="text-align:right;">
-1003
+1006
 </td>
 <td style="text-align:right;">
-117982
+118647
 </td>
 </tr>
 <tr>
@@ -326,7 +332,7 @@ Luxembourg
 828
 </td>
 <td style="text-align:right;">
-74690
+74779
 </td>
 </tr>
 <tr>
@@ -334,10 +340,10 @@ Luxembourg
 Norway
 </td>
 <td style="text-align:right;">
-809
+810
 </td>
 <td style="text-align:right;">
-144478
+145012
 </td>
 </tr>
 <tr>
@@ -345,10 +351,10 @@ Norway
 Cyprus
 </td>
 <td style="text-align:right;">
-461
+464
 </td>
 <td style="text-align:right;">
-109253
+109665
 </td>
 </tr>
 <tr>
@@ -356,10 +362,10 @@ Cyprus
 Malta
 </td>
 <td style="text-align:right;">
-431
+433
 </td>
 <td style="text-align:right;">
-35380
+35434
 </td>
 </tr>
 <tr>
@@ -370,7 +376,7 @@ Liechtenstein
 59
 </td>
 <td style="text-align:right;">
-3175
+3185
 </td>
 </tr>
 <tr>
@@ -381,9 +387,79 @@ Iceland
 30
 </td>
 <td style="text-align:right;">
-9578
+9682
 </td>
 </tr>
 </tbody>
 </table>
+<pre class="r"><code>q$countries &lt;- factor(q$countries, levels = q$countries[order(q$deaths)])
+
+z &lt;- ggplot(data = q, mapping = aes(x = deaths, y = countries)) +
+  geom_bar(stat=&#39;identity&#39;) +
+  theme_light() +
+  theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;)) +
+  scale_x_continuous(name = &quot;Cumulative deaths&quot;, labels = comma)
+
+z</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="deaths-per-million-inhabitants" class="section level2">
+<h2>Deaths per million inhabitants</h2>
+<p>Although Italy was the hardest hit by the virus in absolute values, it was not in terms of deaths per million. The next plot shows this.</p>
+<pre class="r"><code>library(tidyverse)
+library(kableExtra)
+library(scales)
+
+data &lt;- read.csv(&quot;covid-data.csv&quot;)
+
+q &lt;-  data %&gt;% 
+  group_by(countries,population) %&gt;% 
+  summarize(deaths = sum(deaths))
+
+q &lt;- tibble(countries = q$countries, deaths_pm = q$deaths/q$population*1000000) %&gt;%
+  arrange(desc(deaths_pm)) 
+
+q$countries &lt;- factor(q$countries, levels = q$countries[order(q$deaths_pm)])
+
+#create a bar plot of the data above
+z &lt;- ggplot(data = q, mapping = aes(x = deaths_pm, y = countries)) +
+  geom_bar(stat=&#39;identity&#39;) +
+  theme_light() +
+  theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;)) +
+  scale_x_continuous(name = &quot;Deaths per million people&quot;, labels = comma)
+
+#show the plot
+z</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="deaths-per-million-people-as-a-function-of-per-capita-gdp" class="section level2">
+<h2>Deaths per million people as a function of per capita GDP</h2>
+<p>Finally, a trend seems to emerge in which countries with a low per-capita GDP tend to having more deaths per million people.</p>
+<pre class="r"><code>library(tidyverse)
+library(kableExtra)
+library(scales)
+library(ggrepel)
+
+data &lt;- read.csv(&quot;covid-data.csv&quot;)
+gdp_data &lt;- read.csv(&quot;gdp-europe.csv&quot;)
+merged_data &lt;- merge(data, gdp_data, by = &quot;countries&quot;)
+
+q &lt;- merged_data %&gt;% 
+  group_by(countries,gdp_pp,population) %&gt;% 
+  summarize(deaths = sum(deaths))
+
+q &lt;- tibble(countries = q$countries, gdp_pp = q$gdp_pp, deaths_pm = q$deaths/q$population*1000000)
+
+t = ggplot(data = q, mapping = aes(x = gdp_pp, y = deaths_pm)) +
+  geom_point() + 
+  geom_text_repel(aes(label=countries)) +
+  theme_light() +
+  scale_x_continuous(name = &quot;GDP per capita (€)&quot;) +
+  scale_y_continuous(name = &quot;Deaths per million people&quot;, labels = comma) +
+  theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;))
+
+t </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Thank you for having a look at this page. I’ll probably be adding to this analysis in the near future.</p>
+</div>
 </div>
