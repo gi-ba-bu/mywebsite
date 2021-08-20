@@ -401,7 +401,8 @@ z &lt;- ggplot(data = q, mapping = aes(x = deaths, y = countries)) +
   scale_x_continuous(name = &quot;Cumulative deaths&quot;, labels = comma)
 
 z</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+ </p>
 </div>
 <div id="deaths-per-million-inhabitants" class="section level2">
 <h2>Deaths per million inhabitants</h2>
@@ -430,7 +431,8 @@ z &lt;- ggplot(data = q, mapping = aes(x = deaths_pm, y = countries)) +
 
 #show the plot
 z</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+ </p>
 </div>
 <div id="deaths-per-million-people-as-a-function-of-per-capita-gdp" class="section level2">
 <h2>Deaths per million people as a function of per capita GDP</h2>
@@ -459,7 +461,92 @@ t = ggplot(data = q, mapping = aes(x = gdp_pp, y = deaths_pm)) +
   theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;))
 
 t </code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Thank you for having a look at this page. I’ll probably be adding to this analysis in the near future.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+ </p>
+</div>
+<div id="linear-regression" class="section level2">
+<h2>Linear regression</h2>
+<p>Now it seems the right time to check for a linear relationship between deaths and GDP. A preliminary analysis has shown that removing the countries with a population smaller than one million from the data set improves the p-values of the regression method.</p>
+<p>In the next bit of analysis, first I identify and remove these countries from the data set. Then, I perform the linear regression on the new data set.</p>
+<pre class="r"><code>library(tidyverse)
+library(kableExtra)
+library(scales)
+library(ggrepel)
+
+data &lt;- read.csv(&quot;covid-data.csv&quot;)
+gdp_data &lt;- read.csv(&quot;gdp-europe.csv&quot;)
+merged_data &lt;- merge(data, gdp_data, by = &quot;countries&quot;)
+
+#countries with a population size smaller than one million
+c_one_m &lt;- unique(merged_data[which(merged_data$population &lt; 1000000), ]$countries)
+c_one_m &lt;- paste(c_one_m, collapse = &quot;, &quot;)
+print(paste(&quot; The countries with a population size less than one million are&quot;, c_one_m, sep = &quot; &quot;))</code></pre>
+<pre><code>## [1] &quot; The countries with a population size less than one million are Cyprus, Iceland, Luxembourg, Malta&quot;</code></pre>
+<pre class="r"><code>#new data set with only countries with a population size over one million
+merged_data &lt;- merged_data[(merged_data$population &gt; 1000000), ]
+
+#create a table 
+q &lt;- merged_data %&gt;% 
+  group_by(countries,gdp_pp,population) %&gt;% 
+  summarize(deaths = sum(deaths))
+
+#new table with added column &quot;deaths per million people&quot;
+q &lt;- tibble(countries = q$countries, gdp_pp = q$gdp_pp, deaths_pm = q$deaths/q$population*1000000)
+
+# create plot
+t &lt;- ggplot(data = q, mapping = aes(x = gdp_pp, y = deaths_pm)) +
+  geom_point() + 
+  geom_text_repel(aes(label=countries)) +
+  theme_light() +
+  scale_x_continuous(name = &quot;GDP per capita (€)&quot;) +
+  scale_y_continuous(name = &quot;Deaths per million people&quot;, labels = comma) +
+  theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;))
+
+
+#add to the graph the line of best fit derived from the linear regression
+u &lt;- t +
+  geom_smooth(method=&#39;lm&#39;, formula= y~x, se = FALSE)
+
+u</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>#perform linear regression
+m &lt;- lm(deaths_pm ~ gdp_pp, # How does deaths_pm depend on (~) gdp_pp
+        data = q) # Look in &quot;q&quot; for the variables
+
+# print summary of linear regression
+print(summary(m))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = deaths_pm ~ gdp_pp, data = q)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1123.16  -366.32   -40.15   435.28  1050.08 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  2.414e+03  2.212e+02  10.913 1.43e-10 ***
+## gdp_pp      -3.073e-02  7.143e-03  -4.303 0.000265 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 580.7 on 23 degrees of freedom
+## Multiple R-squared:  0.446,  Adjusted R-squared:  0.4219 
+## F-statistic: 18.51 on 1 and 23 DF,  p-value: 0.0002648</code></pre>
+<p> </p>
+</div>
+<div id="comments-on-the-linear-regression" class="section level2">
+<h2>Comments on the linear regression</h2>
+<p>The linear regression analysis tells us a few things. First, the line of best has the following equation:</p>
+<p><span class="math display">\[  y = 2.414 \cdot 10^3 - 3.073 \cdot 10^2 \cdot x \]</span></p>
+<ul>
+<li><p>The variable <span class="math inline">\(x\)</span> stands for GDP per capita, while <span class="math inline">\(y\)</span> stands for deaths per million people. The <span class="math inline">\(x\)</span> coefficient tells us that for an increase in €10,000 of per-capita GDP, deaths are expected to reduce by 307 people.</p></li>
+<li><p>The evidence for accepting this relationship is given by the very small p-value given for gdp_pp as evidenced in the linear regression summary statistics. The p-value is equal to 0.000265. In more technical terms, this means that we can confidently reject the null-hypothesis.</p></li>
+</ul>
+</div>
+<div id="the-end" class="section level2">
+<h2>The end</h2>
+<p>This analysis shows a strong relationship between the wealth of a country and its ability to protect its people from Covid-19.</p>
+<p>Finally, thank you for having a look at this page. I’ll probably be adding to this analysis in the near future.</p>
 </div>
 </div>

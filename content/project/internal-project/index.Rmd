@@ -36,6 +36,7 @@ Before reading on, ask yourself "which EU country was the hardest hit by Covid-1
 &nbsp;
 
 ## Cumulative deaths and cases for each country.
+
 We look at the total number of deaths for each country for which data is available from the ECDC. First, the data is displayed in a table. Below the table, the same data is displayed in a bar plot.
 
 ```{r}
@@ -67,8 +68,10 @@ z <- ggplot(data = q, mapping = aes(x = deaths, y = countries)) +
 
 z
 ```
-  
+&nbsp; 
+
 ## Deaths per million inhabitants
+
 Although Italy was the hardest hit by the virus in absolute values, it was not in terms of deaths per million. The next plot shows this. 
 ```{r}
 library(tidyverse)
@@ -96,8 +99,10 @@ z <- ggplot(data = q, mapping = aes(x = deaths_pm, y = countries)) +
 #show the plot
 z
 ```
+&nbsp;
 
 ## Deaths per million people as a function of per capita GDP
+
 Finally, a trend seems to emerge in which countries with a low per-capita GDP tend to having more deaths per million people.
 ```{r}
 library(tidyverse)
@@ -125,6 +130,77 @@ t = ggplot(data = q, mapping = aes(x = gdp_pp, y = deaths_pm)) +
 
 t 
 ```
+&nbsp;
 
-Thank you for having a look at this page. I'll probably be adding to this analysis in the near future. 
+## Linear regression 
+
+Now it seems the right time to check for a linear relationship between deaths and GDP. A preliminary analysis has shown that removing the countries with a population smaller than one million from the data set improves the p-values of the regression method.
+
+In the next bit of analysis, first I identify and remove these countries from the data set. Then, I perform the linear regression on the new data set. 
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+library(scales)
+library(ggrepel)
+
+data <- read.csv("covid-data.csv")
+gdp_data <- read.csv("gdp-europe.csv")
+merged_data <- merge(data, gdp_data, by = "countries")
+
+#countries with a population size smaller than one million
+c_one_m <- unique(merged_data[which(merged_data$population < 1000000), ]$countries)
+c_one_m <- paste(c_one_m, collapse = ", ")
+print(paste(" The countries with a population size less than one million are", c_one_m, sep = " "))
+
+#new data set with only countries with a population size over one million
+merged_data <- merged_data[(merged_data$population > 1000000), ]
+
+#create a table 
+q <- merged_data %>% 
+  group_by(countries,gdp_pp,population) %>% 
+  summarize(deaths = sum(deaths))
+
+#new table with added column "deaths per million people"
+q <- tibble(countries = q$countries, gdp_pp = q$gdp_pp, deaths_pm = q$deaths/q$population*1000000)
+
+# create plot
+t <- ggplot(data = q, mapping = aes(x = gdp_pp, y = deaths_pm)) +
+  geom_point() + 
+  geom_text_repel(aes(label=countries)) +
+  theme_light() +
+  scale_x_continuous(name = "GDP per capita (€)") +
+  scale_y_continuous(name = "Deaths per million people", labels = comma) +
+  theme(panel.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"), plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"))
+
+
+#add to the graph the line of best fit derived from the linear regression
+u <- t +
+  geom_smooth(method='lm', formula= y~x, se = FALSE)
+
+u
+
+#perform linear regression
+m <- lm(deaths_pm ~ gdp_pp, # How does deaths_pm depend on (~) gdp_pp
+        data = q) # Look in "q" for the variables
+
+# print summary of linear regression
+print(summary(m))
+```
+&nbsp;
+
+## Comments on the linear regression
+The linear regression analysis tells us a few things. First, the line of best has the following equation:
+
+$$  y = 2.414 \cdot 10^3 - 3.073 \cdot 10^2 \cdot x $$
+
+ - The variable $x$ stands for GDP per capita, while $y$ stands for deaths per million people. The $x$ coefficient tells us that for an increase in €10,000 of per-capita GDP, deaths are expected to reduce by 307 people.
+
+ - The evidence for accepting this relationship is given by the very small p-value given for gdp_pp as evidenced in the linear regression summary statistics. The p-value is equal to 0.000265. In more technical terms, this means that we can confidently reject the null-hypothesis.
+
+## The end
+
+This analysis shows a strong relationship between the wealth of a country and its ability to protect its people from Covid-19. 
+
+Finally, thank you for having a look at this page. I'll probably be adding to this analysis in the near future. 
  
