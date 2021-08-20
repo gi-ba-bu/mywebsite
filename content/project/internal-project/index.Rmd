@@ -32,7 +32,8 @@ knitr::opts_chunk$set(message = FALSE, warning=FALSE)
 
 In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control (ECDC) website. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers are usually up to date.
 
-Before reading on, ask yourself "which EU country was the hardest hit by Covid-19?". 
+Before reading on, ask yourself "which EU country was the hardest hit by Covid-19?" and "is the wealth of countries a good predictor of deaths due to Covid-19?"
+
 &nbsp;
 
 ## Cumulative deaths and cases for each country.
