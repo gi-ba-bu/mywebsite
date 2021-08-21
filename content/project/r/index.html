@@ -1,6 +1,6 @@
 ---
 title: R for Data Science
-summary: Getting started
+summary: Using R to explore Covid-19
 author: 'Giacomo Baldo'
 date: '2021-08-17'
 slug: ''
@@ -533,10 +533,21 @@ print(summary(m))</code></pre>
 ## Residual standard error: 580.7 on 23 degrees of freedom
 ## Multiple R-squared:  0.446,  Adjusted R-squared:  0.4219 
 ## F-statistic: 18.51 on 1 and 23 DF,  p-value: 0.0002648</code></pre>
-<p> </p>
+<pre class="r"><code>#print the q-q plot
+ggplot() +
+  stat_qq(aes(sample = m$residuals)) +
+  stat_qq_line(aes(sample = m$residuals)) + 
+  theme_light() +
+  scale_x_continuous(name = &quot;theoretical quantiles&quot;) +
+  scale_y_continuous(name = &quot;sample quantiles&quot;) +
+  theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;),
+plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;)) +
+  ggtitle(&quot;Q-q plot&quot;) </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-2.png" width="672" />
+ </p>
 </div>
-<div id="comments-on-the-linear-regression" class="section level2">
-<h2>Comments on the linear regression</h2>
+<div id="comments-on-the-line-of-best-fit" class="section level2">
+<h2>Comments on the line of best fit</h2>
 <div id="the-line-of-best-fit" class="section level4">
 <h4>The line of best fit</h4>
 <p>The “coefficients” columns in the summary output tell us that the line of best fit has the following equation:</p>
@@ -548,14 +559,21 @@ which is equivalent to</p>
 <h4>Interpreting the line of best fit</h4>
 <p>The variable <span class="math inline">\(x\)</span> stands for GDP per capita, while <span class="math inline">\(y\)</span> stands for deaths per million people. The <span class="math inline">\(x\)</span> coefficient tells us that for an increase in €10,000 of per-capita GDP, deaths are expected to reduce by 307 (per million people).</p>
 </div>
-<div id="the-supporting-statistical-evidence" class="section level4">
-<h4>The supporting statistical evidence</h4>
-<p>The evidence for accepting this relationship is given by the very small p-value given for “gdp_pp” resulted in the linear regression summary statistics. The p-value is equal to 0.000265. In more technical terms, this means that we can confidently reject the null-hypothesis.</p>
+</div>
+<div id="the-supporting-statistical-evidence" class="section level2">
+<h2>The supporting statistical evidence</h2>
+<div id="the-p-value" class="section level4">
+<h4>The p-value</h4>
+<p>The evidence for accepting this relationship is given by the very small p-value given for “gdp_pp” resulted in the linear regression summary statistics. The p-value is equal to 0.000265. In more technical terms (read on if interested in technicalities), this means that we can confidently reject the null-hypothesis (assuming the null-hypothesis to be true, there is only a 0.0265% probability of obtaining a test statistic equal or more extreme than the t-value).</p>
+</div>
+<div id="the-distribution-of-residuals" class="section level4">
+<h4>The distribution of residuals</h4>
+<p>The p-value of the standard linear regression performed above is meaningful if the residuals follow a normal distribution. In the summary statistics, one can see that residuals are symmetrically distributed with mean close to 0 (in relative terms). This is already good evidence for a normal distribution. A more rigorous test for normal distribution is given by a q-q plot, which compares what would be the residuals of data that follow a standard normal distribution to the residuals from the tested data. When the resulting q-q plot follows a straight line, as it roughly does in our case above, the distribution of the residuals does indeed closely follow a normal distribution.</p>
 </div>
 </div>
 <div id="the-end" class="section level2">
 <h2>The end</h2>
-<p>This analysis shows a strong relationship between the wealth of a country and its ability to protect its people from Covid-19.</p>
-<p>Finally, thank you for having a look at this page. I’ll be refining and adding to this analysis in the near future.</p>
+<p>This analysis points to the outcomes of economic inequalities. It shows a strong relationship between the wealth of a country and the ability to protect its citizens from Covid-19.</p>
+<p>Finally, thank you for visiting this page. I’ll be refining and adding to this analysis in the near future.</p>
 </div>
 </div>
