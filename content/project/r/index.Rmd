@@ -208,10 +208,10 @@ plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA")) +
 
 The "coefficients" columns in the summary output tell us that the line of best fit has the following equation:
 
-$$  y = 2.414 \cdot 10^{-3} - 3.073 \cdot 10^{-2} \cdot x $$
+$$  y = 2.414 \cdot 10^{3} - 3.073 \cdot 10^{-2} \cdot x $$
 which is equivalent to
 
-$$  y = 0.002414 - 0.03073 \cdot x. $$
+$$  y = 2414 - 0.03073 \cdot x. $$
 
 #### Interpreting the line of best fit 
 
