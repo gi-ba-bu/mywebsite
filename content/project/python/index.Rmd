@@ -20,7 +20,7 @@ knitr::opts_chunk$set(hold = TRUE )
 library('reticulate')
 ```
 
-## For now, I am building this page for fun as a random collection of things I learnt about Python. At the same time, I am trying to find out the best way to display code from Rmarkdown.
+## For now, I am building this page for fun as a random collection of things I learnt about Python. At the same time, I am trying to find out the best way to display code from Rmarkdown. P.s.: my ability to use Python goes beyond what is shown here. 
 
 For Rmarkdown fans, how cool, I'm showing the Python code and its output (the lines starting with ##) by including the code directly into the Rmarkdown file. In other words, the Python output is rendered when this document is compiled. 
 &nbsp;  

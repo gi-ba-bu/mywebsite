@@ -104,7 +104,7 @@ z
 
 ## Deaths per million people as a function of per capita GDP
 
-Finally, a trend seems to emerge in which countries with a low per-capita GDP tend to having more deaths per million people.
+Finally, a trend seems to emerge in which countries with a low per-capita GDP tend to accrue more deaths per million people.
 ```{r}
 library(tidyverse)
 library(kableExtra)
