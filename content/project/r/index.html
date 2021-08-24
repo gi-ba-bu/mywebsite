@@ -20,8 +20,8 @@ output:
 <link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
 
 
-<div id="using-ggplot-and-dplyr" class="section level1">
-<h1>Using <mark>ggplot()</mark> and <mark>dplyr</mark ></h1>
+<div id="using-ggplot-and-dplyr-in-standard-linear-regression." class="section level1">
+<h1>Using <mark>ggplot()</mark> and <mark>dplyr</mark > in standard linear regression.</h1>
 <p>In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control (ECDC) website and does not include data about the United Kingdom. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers refer to the pandemic from its beginning to mid_august 2021.</p>
 <p>Here I will try to answer the following question, ask yourself “which EU country was the hardest hit by Covid-19?” and “is the wealth of countries a good predictor of deaths due to Covid-19?”</p>
 <p> </p>
@@ -581,9 +581,124 @@ which is equivalent to</p>
 <hr />
 </div>
 </div>
-<div id="press-freedom-and-covid-19-deaths" class="section level1">
-<h1>Press freedom and covid-19 deaths</h1>
+<div id="press-freedom-and-covid-19-deaths-a-correlation" class="section level1">
+<h1>Press freedom and Covid-19 deaths: a correlation</h1>
+<p>In this section, I look at the relationship between freedom of press and cumulative deaths due to Covid-19 for each of the countries considered above. I decided to do so because, as we will see, press freedom is an even stronger predictor than GDP for deaths per million people.
+ 
+Data for deaths is imported from the ECDC (European Centre for Diseases prevention and Control). Data for the GDP is imported from Eurostat. Data for press freedom is imported from RSF (Reporters Sans Frontiers): a lower score implies greater freedom of press.</p>
+<p>In the code below, the following steps are completed:</p>
+<ul>
+<li><p>The data is imported from separate sources and merged</p></li>
+<li><p>A scatter plot with line of best fit is displayed</p></li>
+<li><p>A summary statistics of the linear regression is printed</p></li>
+<li><p>A q-q plot for the residuals is printed</p></li>
+</ul>
+<p> </p>
+<pre class="r"><code>library(tidyverse)
+library(kableExtra)
+library(scales)
+library(ggrepel)
+library(scatterplot3d)
+
+data &lt;- read.csv(&quot;covid-data.csv&quot;) # from the ECDC
+gdp_data &lt;- read.csv(&quot;gdp-europe.csv&quot;) # from EUROSTAT
+merged_data &lt;- merge(data, gdp_data, by = &quot;countries&quot;)
+press_fr &lt;- read.csv(&quot;index_2021.csv&quot;) # from Reporters Sans Frontiers
+merged_data &lt;- merge(merged_data, press_fr, by = &quot;countries&quot;)
+
+#new data set with only countries with a population size over one million
+merged_data &lt;- merged_data[(merged_data$population &gt; 1000000), ]
+
+#create a table
+q &lt;- merged_data %&gt;%
+  group_by(countries, gdp_pp, population, score) %&gt;%
+  summarize(deaths = sum(deaths))
+
+#new table with added column &quot;deaths per million&quot; and &quot;press freedom score&quot;
+q &lt;- tibble(countries = q$countries, gdp_pp = q$gdp_pp, deaths_pm = q$deaths/q$population*1000000, press = q$score )
+
+# create plot
+t &lt;- ggplot(data = q, mapping = aes(x = press, y = deaths_pm)) +
+  geom_point() +
+  geom_text_repel(aes(label=countries)) +
+  theme_light() +
+  scale_x_continuous(name = &quot;Press freedom score 2021&quot;) +
+  scale_y_continuous(name = &quot;Deaths per million people&quot;, labels = comma) +
+  theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;))
+
+#add to the graph the line of best fit derived from the linear regression
+u &lt;- t +
+  geom_smooth(method=&#39;lm&#39;, formula= y~x, se = FALSE)
+
+print(u)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>#calculate and extract regression statistics summary
+m &lt;- lm(deaths_pm ~ press, # How does deaths_pm depend on (~) the 2021 press freedom score
+         data = q) # Look in &quot;q&quot; for the variables
+print(summary(m))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = deaths_pm ~ press, data = q)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1026.8  -284.4  -123.8   359.3  1029.9 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   399.34     247.71   1.612    0.121    
+## press          65.56      12.24   5.358 1.93e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 520.3 on 23 degrees of freedom
+## Multiple R-squared:  0.5552, Adjusted R-squared:  0.5359 
+## F-statistic: 28.71 on 1 and 23 DF,  p-value: 1.928e-05</code></pre>
+<pre class="r"><code>#plot the q-q plot for the residuals
+pl &lt;- ggplot() +
+  stat_qq(aes(sample = m$residuals)) +
+  stat_qq_line(aes(sample = m$residuals)) + 
+  theme_light() +
+  scale_x_continuous(name = &quot;theoretical quantiles&quot;) +
+  scale_y_continuous(name = &quot;sample quantiles&quot;) +
+  theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;),
+        plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;)) +
+  ggtitle(&quot;Q-q plot&quot;) 
+
+plot(pl)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<div id="comments-on-the-line-of-best-fit-1" class="section level2">
+<h2>Comments on the line of best fit</h2>
+<div id="the-line-of-best-fit-1" class="section level4">
+<h4>The line of best fit</h4>
+<p>The “coefficients” columns in the summary output tell us that the line of best fit has the following equation:</p>
+<p><span class="math display">\[  y = 399.34 + 65.56 x. \]</span></p>
+</div>
+<div id="interpreting-the-line-of-best-fit-1" class="section level4">
+<h4>Interpreting the line of best fit</h4>
+<p>The variable <span class="math inline">\(x\)</span> stands for the freedom of press score, while <span class="math inline">\(y\)</span> stands for deaths per million people. The <span class="math inline">\(x\)</span> coefficient tells us that for a 10-point worsening of the score, deaths are expected to increase by a count of 655 (per million people).</p>
+</div>
+</div>
+<div id="supporting-statistical-evidence-1" class="section level2">
+<h2>Supporting statistical evidence</h2>
+<div id="the-p-value-1" class="section level4">
+<h4>The p-value</h4>
+<p>The evidence for accepting this relationship is given by the very small p-value given for “press” resulted in the linear regression summary statistics. The p-value is equal to 0.0000193. In more technical terms (read on if interested in technicalities), this means that we can confidently reject the null-hypothesis (assuming the null-hypothesis to be true, there is only a 0.00193% probability of obtaining a test statistic equal or more extreme than the t-value).</p>
+</div>
+<div id="the-distribution-of-residuals-1" class="section level4">
+<h4>The distribution of residuals</h4>
+<p>When the resulting q-q plot follows a straight line, as it roughly does in our case above, the distribution of the residuals closely follows a normal distribution.</p>
+</div>
+<div id="r-squared-1" class="section level4">
+<h4>R squared</h4>
+<p>The value for R squared is 0.5552 (0.5359 when adjusted). As rule of thumb, this implies that just over 50% of the variance of the dependent variable (deaths) is explained by the dependent variable (GDP) alone.</p>
+</div>
+</div>
+<div id="comments" class="section level2">
+<h2>Comments</h2>
+<p>All statistical predictors tell us that press freedom is a slightly more robust predictor of deaths due to Covid than per-capita GDP. Technically, this is due to a lower p-value, lower standard residual error, higher R-squared coefficient and higher value for the F-statistic.</p>
 <div id="ill-be-refining-and-adding-to-this-analysis-in-the-near-future." class="section level4">
 <h4>I’ll be refining and adding to this analysis in the near future.</h4>
+</div>
 </div>
 </div>

@@ -28,7 +28,7 @@ knitr::opts_chunk$set(message = FALSE, warning=FALSE)
 #theme_set(theme_minimal()) # my favorite ggplot theme
 ```
 
-# Using <mark>ggplot()</mark> and <mark>dplyr</mark >
+# Using <mark>ggplot()</mark> and <mark>dplyr</mark > in standard linear regression.
 
 In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control (ECDC) website and does not include data about the United Kingdom. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers refer to the pandemic from its beginning to mid_august 2021.
 
@@ -238,11 +238,111 @@ The value for R squared is 0.446 (0.4219 when adjusted). As rule of thumb, this 
 This analysis points to the outcomes of economic inequalities. Perhaps unsurprisingly, it shows that countries with higher per-capita GDP are better equipped to prevent deaths from Covid-19. Nevertheless, as expected, not all variability in deaths is explained in terms of one variable.  
 
 ---
-# Press freedom and covid-19 deaths
+# Press freedom and Covid-19 deaths: a correlation
+
+In this section, I look at the relationship between freedom of press and cumulative deaths due to Covid-19 for each of the countries considered above. I decided to do so because, as we will see, press freedom is an even stronger predictor than GDP for deaths per million people. 
+&nbsp;
+Data for deaths is imported from the ECDC (European Centre for Diseases prevention and Control). Data for the GDP is imported from Eurostat. Data for press freedom is imported from RSF (Reporters Sans Frontiers): a lower score implies greater freedom of press. 
+
+In the code below, the following steps are completed:
+
+- The data is imported from separate sources and merged
+
+- A scatter plot with line of best fit is displayed
+
+- A summary statistics of the linear regression is printed
+
+- A q-q plot for the residuals is printed 
+
+&nbsp;
+```{r}
+library(tidyverse)
+library(kableExtra)
+library(scales)
+library(ggrepel)
+library(scatterplot3d)
+
+data <- read.csv("covid-data.csv") # from the ECDC
+gdp_data <- read.csv("gdp-europe.csv") # from EUROSTAT
+merged_data <- merge(data, gdp_data, by = "countries")
+press_fr <- read.csv("index_2021.csv") # from Reporters Sans Frontiers
+merged_data <- merge(merged_data, press_fr, by = "countries")
+
+#new data set with only countries with a population size over one million
+merged_data <- merged_data[(merged_data$population > 1000000), ]
+
+#create a table
+q <- merged_data %>%
+  group_by(countries, gdp_pp, population, score) %>%
+  summarize(deaths = sum(deaths))
+
+#new table with added column "deaths per million" and "press freedom score"
+q <- tibble(countries = q$countries, gdp_pp = q$gdp_pp, deaths_pm = q$deaths/q$population*1000000, press = q$score )
+
+# create plot
+t <- ggplot(data = q, mapping = aes(x = press, y = deaths_pm)) +
+  geom_point() +
+  geom_text_repel(aes(label=countries)) +
+  theme_light() +
+  scale_x_continuous(name = "Press freedom score 2021") +
+  scale_y_continuous(name = "Deaths per million people", labels = comma) +
+  theme(panel.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"), plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"))
+
+#add to the graph the line of best fit derived from the linear regression
+u <- t +
+  geom_smooth(method='lm', formula= y~x, se = FALSE)
+
+print(u)
+
+#calculate and extract regression statistics summary
+m <- lm(deaths_pm ~ press, # How does deaths_pm depend on (~) the 2021 press freedom score
+         data = q) # Look in "q" for the variables
+print(summary(m))
+
+#plot the q-q plot for the residuals
+pl <- ggplot() +
+  stat_qq(aes(sample = m$residuals)) +
+  stat_qq_line(aes(sample = m$residuals)) + 
+  theme_light() +
+  scale_x_continuous(name = "theoretical quantiles") +
+  scale_y_continuous(name = "sample quantiles") +
+  theme(panel.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"),
+        plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA")) +
+  ggtitle("Q-q plot") 
+
+plot(pl)
+```
+
+## Comments on the line of best fit 
+
+#### The line of best fit 
+
+The "coefficients" columns in the summary output tell us that the line of best fit has the following equation:
+
+$$  y = 399.34 + 65.56 x. $$
+
+#### Interpreting the line of best fit 
+
+The variable $x$ stands for the freedom of press score, while $y$ stands for deaths per million people. The $x$ coefficient tells us that for a  10-point worsening of the score, deaths are expected to increase by a count of 655 (per million people).
+
+## Supporting statistical evidence 
+
+#### The p-value
+
+The evidence for accepting this relationship is given by the very small p-value given for "press" resulted in the linear regression summary statistics. The p-value is equal to 0.0000193. In more technical terms (read on if interested in technicalities), this means that we can confidently reject the null-hypothesis (assuming the null-hypothesis to be true, there is only a 0.00193% probability of obtaining a test statistic equal or more extreme than the t-value). 
+
+#### The distribution of residuals
+
+When the resulting q-q plot follows a straight line, as it roughly does in our case above, the distribution of the residuals closely follows a normal distribution.
+
+#### R squared
+
+The value for R squared is 0.5552 (0.5359 when adjusted). As rule of thumb, this implies that just over 50% of the variance of the dependent variable (deaths) is explained by the dependent variable (GDP) alone.  
 
 
 
-
+## Comments
+All statistical predictors tell us that press freedom is a slightly more robust predictor of deaths due to Covid than per-capita GDP. Technically, this is due to a lower p-value, lower standard residual error, higher R-squared coefficient and higher value for the F-statistic. 
 
 
 
