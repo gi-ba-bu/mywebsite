@@ -28,21 +28,21 @@ knitr::opts_chunk$set(message = FALSE, warning=FALSE)
 #theme_set(theme_minimal()) # my favorite ggplot theme
 ```
 
-# Using <mark>ggplot()</mark> and <mark>dplyr</mark > in <mark>standard linear regression</mark>.
+# <mark> Linear regression </mark> using <mark>ggplot()</mark> and <mark>dplyr</mark>.
 
-In this section I take a look at data related to the Covid-19 epidemic. I will try to answer the following questions: "which EU country was the hardest hit by Covid-19?" and "is the wealth of countries a good predictor of deaths due to Covid-19?"
+In this section I take a look at data related to the Covid-19 epidemic. I will try to answer the following questions: "which EU country was the hardest hit by Covid-19?" and "is the wealth of countries a good predictor of deaths due to Covid-19?" At very the end, I'll include data about press freedom (for reasons that will be made clear).
 
 The data that I use is imported from the European Centre for Disease Prevention and Control (ECDC) website and does not include data about the United Kingdom. First, I will show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers refer to the pandemic from its beginning to mid august 2021. Second, for each country, I import information about its GDP from the Eurostat website.
 
-The R code used in this study is displayed in code chunks below; the code output is rendered after each output command. In the next section, you will find that:
+The R code used in this study is displayed in code chunks below; the code output is rendered after each output command. In the next section, you will find:
 
-- The data is imported from separate sources and merged
+- data being imported from separate sources and merged
 
-- A scatter plot with line of best fit is displayed
+- a scatter plot with a line of best fit
 
-- A summary statistics of the linear regression is printed
+- a summary of statistics about the linear regression
 
-- A q-q plot for the residuals is printed 
+- a q-q plot for the residuals of the linear regression
 
 &nbsp;
 
@@ -254,15 +254,15 @@ In this section, I look at the relationship between freedom of press and cumulat
 &nbsp;
 Data for deaths is imported from the ECDC (European Centre for Diseases prevention and Control). Data for the GDP is imported from Eurostat. Data for press freedom is imported from RSF (Reporters Sans Frontiers): a lower score implies greater freedom of press. 
 
-In the code below, the following steps are completed:
+In the code chunks below, you will find:
 
-- The data is imported from separate sources and merged
+- data being imported from separate sources and merged
 
-- A scatter plot with line of best fit is displayed
+- a scatter plot with a line of best fit
 
-- A summary statistics of the linear regression is printed
+- a summary of statistics about the linear regression
 
-- A q-q plot for the residuals is printed 
+- a q-q plot for the residuals of the linear regression
 
 &nbsp;
 ```{r}
