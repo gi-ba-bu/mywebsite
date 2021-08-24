@@ -5,7 +5,7 @@ author: 'Giacomo Baldo'
 date: '2021-08-17'
 slug: ''
 categories: ["R"]
-tags: ["R", "Data Science"]
+tags: ["R", "Data Science", "Linear regression"]
 image:
   caption: ''
   focal_point: ''
@@ -21,9 +21,16 @@ output:
 
 
 <div id="using-ggplot-and-dplyr-in-standard-linear-regression." class="section level1">
-<h1>Using <mark>ggplot()</mark> and <mark>dplyr</mark > in standard linear regression.</h1>
-<p>In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control (ECDC) website and does not include data about the United Kingdom. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers refer to the pandemic from its beginning to mid_august 2021.</p>
-<p>Here I will try to answer the following question, ask yourself “which EU country was the hardest hit by Covid-19?” and “is the wealth of countries a good predictor of deaths due to Covid-19?”</p>
+<h1>Using <mark>ggplot()</mark> and <mark>dplyr</mark > in <mark>standard linear regression</mark>.</h1>
+<p>In this section I take a look at data related to the Covid-19 epidemic. I will try to answer the following questions: “which EU country was the hardest hit by Covid-19?” and “is the wealth of countries a good predictor of deaths due to Covid-19?”</p>
+<p>The data that I use is imported from the European Centre for Disease Prevention and Control (ECDC) website and does not include data about the United Kingdom. First, I will show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers refer to the pandemic from its beginning to mid august 2021. Second, for each country, I import information about its GDP from the Eurostat website.</p>
+<p>The R code used in this study is displayed in code chunks below; the code output is rendered after each output command. In the next section, you will find that:</p>
+<ul>
+<li><p>The data is imported from separate sources and merged</p></li>
+<li><p>A scatter plot with line of best fit is displayed</p></li>
+<li><p>A summary statistics of the linear regression is printed</p></li>
+<li><p>A q-q plot for the residuals is printed</p></li>
+</ul>
 <p> </p>
 <div id="cumulative-deaths-and-cases-for-each-country." class="section level2">
 <h2>Cumulative deaths and cases for each country.</h2>
@@ -404,8 +411,8 @@ z</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
  </p>
 </div>
-<div id="deaths-per-million-inhabitants" class="section level2">
-<h2>Deaths per million inhabitants</h2>
+<div id="deaths-per-million-people" class="section level2">
+<h2>Deaths per million people</h2>
 <p>Although Italy was the hardest hit by the virus in absolute values, it was not in terms of deaths per million. The next plot shows this.</p>
 <pre class="r"><code>library(tidyverse)
 library(kableExtra)
@@ -435,8 +442,8 @@ z</code></pre>
  </p>
 </div>
 <div id="deaths-per-million-people-as-a-function-of-per-capita-gdp" class="section level2">
-<h2>Deaths per million people as a function of per capita GDP</h2>
-<p>Finally, a trend seems to emerge in which countries with a low per-capita GDP tend to accrue more deaths per million people.</p>
+<h2>Deaths per million people as a function of per-capita GDP</h2>
+<p>Next, a trend emerges in which countries with a lower per-capita GDP tend to accrue more deaths per million people.</p>
 <pre class="r"><code>library(tidyverse)
 library(kableExtra)
 library(scales)
@@ -575,14 +582,14 @@ which is equivalent to</p>
 <p>The value for R squared is 0.446 (0.4219 when adjusted). As rule of thumb, this implies that just over 40% of the variance of the dependent variable (deaths) is explained by the dependent variable (GDP) alone.</p>
 </div>
 </div>
-<div id="conclusions" class="section level2">
-<h2>Conclusions</h2>
+<div id="comments" class="section level2">
+<h2>Comments</h2>
 <p>This analysis points to the outcomes of economic inequalities. Perhaps unsurprisingly, it shows that countries with higher per-capita GDP are better equipped to prevent deaths from Covid-19. Nevertheless, as expected, not all variability in deaths is explained in terms of one variable.</p>
 <hr />
 </div>
 </div>
-<div id="press-freedom-and-covid-19-deaths-a-correlation" class="section level1">
-<h1>Press freedom and Covid-19 deaths: a correlation</h1>
+<div id="press-freedom-and-covid-19-deaths" class="section level1">
+<h1>Press freedom and Covid-19 deaths</h1>
 <p>In this section, I look at the relationship between freedom of press and cumulative deaths due to Covid-19 for each of the countries considered above. I decided to do so because, as we will see, press freedom is an even stronger predictor than GDP for deaths per million people.
  
 Data for deaths is imported from the ECDC (European Centre for Diseases prevention and Control). Data for the GDP is imported from Eurostat. Data for press freedom is imported from RSF (Reporters Sans Frontiers): a lower score implies greater freedom of press.</p>
@@ -691,10 +698,10 @@ plot(pl)</code></pre>
 </div>
 <div id="r-squared-1" class="section level4">
 <h4>R squared</h4>
-<p>The value for R squared is 0.5552 (0.5359 when adjusted). As rule of thumb, this implies that just over 50% of the variance of the dependent variable (deaths) is explained by the dependent variable (GDP) alone.</p>
+<p>The value for R squared is 0.5552 (0.5359 when adjusted). As rule of thumb, this implies that just over 50% of the variance of the dependent variable (deaths) is explained by the dependent variable (press freedom score) alone.</p>
 </div>
 </div>
-<div id="comments" class="section level2">
+<div id="comments-1" class="section level2">
 <h2>Comments</h2>
 <p>All statistical predictors tell us that press freedom is a slightly more robust predictor of deaths due to Covid than per-capita GDP. Technically, this is due to a lower p-value, lower standard residual error, higher R-squared coefficient and higher value for the F-statistic.</p>
 <div id="ill-be-refining-and-adding-to-this-analysis-in-the-near-future." class="section level4">

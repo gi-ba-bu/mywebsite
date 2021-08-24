@@ -5,7 +5,7 @@ author: 'Giacomo Baldo'
 date: '2021-08-17'
 slug: ''
 categories: ["R"]
-tags: ["R", "Data Science"]
+tags: ["R", "Data Science", "Linear regression"]
 image:
   caption: ''
   focal_point: ''
@@ -28,11 +28,21 @@ knitr::opts_chunk$set(message = FALSE, warning=FALSE)
 #theme_set(theme_minimal()) # my favorite ggplot theme
 ```
 
-# Using <mark>ggplot()</mark> and <mark>dplyr</mark > in standard linear regression.
+# Using <mark>ggplot()</mark> and <mark>dplyr</mark > in <mark>standard linear regression</mark>.
 
-In this section I take a look at data related to the Covid-19 epidemic. The data is imported from the European Centre for Disease Prevention and Control (ECDC) website and does not include data about the United Kingdom. First, I show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers refer to the pandemic from its beginning to mid_august 2021.
+In this section I take a look at data related to the Covid-19 epidemic. I will try to answer the following questions: "which EU country was the hardest hit by Covid-19?" and "is the wealth of countries a good predictor of deaths due to Covid-19?"
 
-Here I will try to answer the following question, ask yourself "which EU country was the hardest hit by Covid-19?" and "is the wealth of countries a good predictor of deaths due to Covid-19?"
+The data that I use is imported from the European Centre for Disease Prevention and Control (ECDC) website and does not include data about the United Kingdom. First, I will show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers refer to the pandemic from its beginning to mid august 2021. Second, for each country, I import information about its GDP from the Eurostat website.
+
+The R code used in this study is displayed in code chunks below; the code output is rendered after each output command. In the next section, you will find that:
+
+- The data is imported from separate sources and merged
+
+- A scatter plot with line of best fit is displayed
+
+- A summary statistics of the linear regression is printed
+
+- A q-q plot for the residuals is printed 
 
 &nbsp;
 
@@ -71,7 +81,7 @@ z
 ```
 &nbsp; 
 
-## Deaths per million inhabitants
+## Deaths per million people
 
 Although Italy was the hardest hit by the virus in absolute values, it was not in terms of deaths per million. The next plot shows this. 
 ```{r}
@@ -102,9 +112,9 @@ z
 ```
 &nbsp;
 
-## Deaths per million people as a function of per capita GDP
+## Deaths per million people as a function of per-capita GDP
 
-Finally, a trend seems to emerge in which countries with a low per-capita GDP tend to accrue more deaths per million people.
+Next, a trend emerges in which countries with a lower per-capita GDP tend to accrue more deaths per million people.
 ```{r}
 library(tidyverse)
 library(kableExtra)
@@ -233,12 +243,12 @@ The value for R squared is 0.446 (0.4219 when adjusted). As rule of thumb, this 
 
 
 
-## Conclusions
+## Comments
 
 This analysis points to the outcomes of economic inequalities. Perhaps unsurprisingly, it shows that countries with higher per-capita GDP are better equipped to prevent deaths from Covid-19. Nevertheless, as expected, not all variability in deaths is explained in terms of one variable.  
 
 ---
-# Press freedom and Covid-19 deaths: a correlation
+# Press freedom and Covid-19 deaths
 
 In this section, I look at the relationship between freedom of press and cumulative deaths due to Covid-19 for each of the countries considered above. I decided to do so because, as we will see, press freedom is an even stronger predictor than GDP for deaths per million people. 
 &nbsp;
@@ -337,7 +347,7 @@ When the resulting q-q plot follows a straight line, as it roughly does in our c
 
 #### R squared
 
-The value for R squared is 0.5552 (0.5359 when adjusted). As rule of thumb, this implies that just over 50% of the variance of the dependent variable (deaths) is explained by the dependent variable (GDP) alone.  
+The value for R squared is 0.5552 (0.5359 when adjusted). As rule of thumb, this implies that just over 50% of the variance of the dependent variable (deaths) is explained by the dependent variable (press freedom score) alone.  
 
 
 
