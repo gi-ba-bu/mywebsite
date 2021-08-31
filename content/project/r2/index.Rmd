@@ -27,7 +27,7 @@ library(kableExtra)        # for better tables
 library(scales)            # to decide between scientific and extended number notation in plots
 ```
 
-**Step 1)** Import the data. The was previously downloaded (on 18/08/2021) from the ECDC website, the European Centre for Disease prevention and Control.
+**Step 1)** Import the data. The data was previously downloaded to my laptop (on 18/08/2021) from the ECDC website, the European Centre for Disease prevention and Control.
 ```{r}
 #read the dataset into “R”. The dataset will be called "data".
 data <- read.csv("covid-data.csv")
