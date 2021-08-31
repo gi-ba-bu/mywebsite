@@ -1,0 +1,686 @@
+---
+title: R for Data Science
+summary: Data wrangling
+author: 'Giacomo Baldo'
+date: '2021-08-30'
+slug: ''
+categories: ["R"]
+tags: ["R", "Data Science", "Data wrangling", "pivot_wider()"]
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+output:
+  blogdown::html_page:
+    df_print: kable  #kable, tibble, and paged are also options
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<div id="data-wrangling-with-pivot_wider." class="section level1">
+<h1><mark>Data wrangling</mark> with <mark>pivot_wider()</mark>.</h1>
+<p><strong>Step 0)</strong> This page starts by setting up the options for this document and loading the R libraries required later.</p>
+<pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning=FALSE)</code></pre>
+<pre class="r"><code>library(tidyverse)         # for graphing and data cleaning
+library(kableExtra)        # for better tables
+library(scales)            # to decide between scientific and extended number notation in plots</code></pre>
+<p><strong>Step 1)</strong> Import the data. The was previously downloaded (on 18/08/2021) from the ECDC website, the European Centre for Disease prevention and Control.</p>
+<pre class="r"><code>#read the dataset into “R”. The dataset will be called &quot;data&quot;.
+data &lt;- read.csv(&quot;covid-data.csv&quot;)</code></pre>
+<p><strong>Step 2)</strong> Display six arbitrarily chosen rows of the data, in this case rows 1 to 3 and 5003 to 5005.</p>
+<pre class="r"><code>kbl(data[c(1:3,5003:5005),]) %&gt;%
+   kable_styling(bootstrap_options = c(&quot;responsive&quot;))</code></pre>
+<table class="table table-responsive" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+date
+</th>
+<th style="text-align:right;">
+cases
+</th>
+<th style="text-align:right;">
+deaths
+</th>
+<th style="text-align:left;">
+countries
+</th>
+<th style="text-align:right;">
+population
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+18/08/2021
+</td>
+<td style="text-align:right;">
+864
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+<td style="text-align:right;">
+8901064
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+17/08/2021
+</td>
+<td style="text-align:right;">
+715
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+<td style="text-align:right;">
+8901064
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+16/08/2021
+</td>
+<td style="text-align:right;">
+871
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+<td style="text-align:right;">
+8901064
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5003
+</td>
+<td style="text-align:left;">
+06/07/2021
+</td>
+<td style="text-align:right;">
+369
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Sweden
+</td>
+<td style="text-align:right;">
+10327589
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5004
+</td>
+<td style="text-align:left;">
+05/07/2021
+</td>
+<td style="text-align:right;">
+414
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Sweden
+</td>
+<td style="text-align:right;">
+10327589
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5005
+</td>
+<td style="text-align:left;">
+04/07/2021
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Sweden
+</td>
+<td style="text-align:right;">
+10327589
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3)</strong> Create and display a data set made of less information, recording only date, country and deaths.</p>
+<pre class="r"><code>data_less &lt;- data[,c(&quot;date&quot;,&quot;deaths&quot;,&quot;countries&quot;)]
+
+kbl(data_less[c(1:3,5003:5005),]) %&gt;%
+   kable_styling(bootstrap_options = c(&quot;responsive&quot;))</code></pre>
+<table class="table table-responsive" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+date
+</th>
+<th style="text-align:right;">
+deaths
+</th>
+<th style="text-align:left;">
+countries
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+18/08/2021
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+17/08/2021
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+16/08/2021
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5003
+</td>
+<td style="text-align:left;">
+06/07/2021
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Sweden
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5004
+</td>
+<td style="text-align:left;">
+05/07/2021
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Sweden
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5005
+</td>
+<td style="text-align:left;">
+04/07/2021
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Sweden
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 4)</strong> Rearrange the data in a table with more columns using the function <strong>pivot_wider()</strong>. Then, display the first three rows.</p>
+<pre class="r"><code>q &lt;- data_less %&gt;% 
+        pivot_wider(id_cols = date,
+                 names_from = countries,
+                values_from = deaths)
+kbl(q[c(1:3),]) %&gt;%
+   kable_styling(bootstrap_options = c(&quot;responsive&quot;))</code></pre>
+<table class="table table-responsive" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+date
+</th>
+<th style="text-align:right;">
+Austria
+</th>
+<th style="text-align:right;">
+Belgium
+</th>
+<th style="text-align:right;">
+Bulgaria
+</th>
+<th style="text-align:right;">
+Croatia
+</th>
+<th style="text-align:right;">
+Cyprus
+</th>
+<th style="text-align:right;">
+Czechia
+</th>
+<th style="text-align:right;">
+Denmark
+</th>
+<th style="text-align:right;">
+Estonia
+</th>
+<th style="text-align:right;">
+Finland
+</th>
+<th style="text-align:right;">
+France
+</th>
+<th style="text-align:right;">
+Germany
+</th>
+<th style="text-align:right;">
+Greece
+</th>
+<th style="text-align:right;">
+Hungary
+</th>
+<th style="text-align:right;">
+Iceland
+</th>
+<th style="text-align:right;">
+Ireland
+</th>
+<th style="text-align:right;">
+Italy
+</th>
+<th style="text-align:right;">
+Latvia
+</th>
+<th style="text-align:right;">
+Liechtenstein
+</th>
+<th style="text-align:right;">
+Lithuania
+</th>
+<th style="text-align:right;">
+Luxembourg
+</th>
+<th style="text-align:right;">
+Malta
+</th>
+<th style="text-align:right;">
+Netherlands
+</th>
+<th style="text-align:right;">
+Norway
+</th>
+<th style="text-align:right;">
+Poland
+</th>
+<th style="text-align:right;">
+Portugal
+</th>
+<th style="text-align:right;">
+Romania
+</th>
+<th style="text-align:right;">
+Slovakia
+</th>
+<th style="text-align:right;">
+Slovenia
+</th>
+<th style="text-align:right;">
+Spain
+</th>
+<th style="text-align:right;">
+Sweden
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+18/08/2021
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+145
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17/08/2021
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+144
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+16/08/2021
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+125
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>With this new table, we can now readily compare the number of deaths across countries on a given date.</p>
+<div id="ill-be-refining-and-adding-to-this-analysis-in-the-near-future." class="section level4">
+<h4>I’ll be refining and adding to this analysis in the near future.</h4>
+</div>
+</div>
