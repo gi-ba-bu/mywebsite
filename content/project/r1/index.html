@@ -27,9 +27,10 @@ output:
 <pre class="r"><code>library(tidyverse)         # for graphing and data cleaning
 library(kableExtra)        # for better tables
 library(scales)            # to decide between scientific and extended number notation in plots</code></pre>
-<p>In this section I take a look at data related to the Covid-19 epidemic. I will try to answer the following questions: “which EU country was hardest hit by Covid-19?” and “is the wealth of countries a good predictor of deaths due to Covid-19?” At very the end, I’ll include data about press freedom (for reasons that will be made clear).</p>
-<p>The data that I use is imported from the European Centre for Disease Prevention and Control (ECDC) website which does not include data about the United Kingdom. First, I will show a table for the cumulative deaths and cases for each EU country for which data is available. Numbers refer to the pandemic from its beginning to mid august 2021. Second, for each country, I import information about its GDP from the Eurostat website.</p>
-<p>The R code used in this study is displayed in code chunks below; the code output is rendered after each output command. In the next section, you will find:</p>
+<p><strong>Motivation</strong> In this section I take a look at data related to the Covid-19 epidemic. I will try to answer the following questions: “which EU country was hardest hit by Covid-19?” and “is the wealth of countries a good predictor of deaths due to Covid-19?” At very the end, I’ll include data about press freedom (for reasons that will be made clear).</p>
+<p><strong>Where does the data come from?</strong> The data that I use is imported from the European Centre for Disease Prevention and Control (ECDC) website (it does not include data about the United Kingdom). First, I will show a table for the cumulative deaths and cases for each EU country for which data is available in the ECDC dataset. Numbers refer to the pandemic from its beginning to mid august 2021. Second, for each country, I import information about its GDP from the Eurostat website.</p>
+<p><strong>The code</strong>. I have used R. The code used is displayed in chunks and the output is rendered in the document.</p>
+<p><strong>Outline</strong>. In the next section, you will find:</p>
 <ul>
 <li><p>data being imported from separate sources and merged</p></li>
 <li><p>a scatter plot with a line of best fit</p></li>
@@ -39,18 +40,18 @@ library(scales)            # to decide between scientific and extended number no
 <p> </p>
 <div id="cumulative-deaths-and-cases-for-each-country." class="section level2">
 <h2>Cumulative deaths and cases for each country.</h2>
-<p>We look at the total number of deaths for each country for which data is available from the ECDC. First, the data is displayed in a table. Below the table, the same data is displayed in a bar plot.</p>
+<p>Step 1) I import the data, previously downloaded from the ECDC website.</p>
 <pre class="r"><code>#read the dataset into “R”. The dataset will be called &quot;data&quot;.
-data &lt;- read.csv(&quot;covid-data.csv&quot;)
-
-#extract cumulative deaths and cases for each EU country for which data is available
+data &lt;- read.csv(&quot;covid-data.csv&quot;)</code></pre>
+<p>Step 2) I create a table containing the total number of deaths for each country for which data is available from the ECDC.</p>
+<pre class="r"><code>#extract cumulative deaths and cases for each EU country for which data is available
 q &lt;- data %&gt;% 
   group_by(countries) %&gt;% 
   summarize(deaths = sum(deaths),
             cases = sum(cases)) %&gt;% 
-  arrange(desc(deaths))
-
-#plot the table
+  arrange(desc(deaths))</code></pre>
+<p>Step 3) The data is displayed in a (long) table.</p>
+<pre class="r"><code>#plot the table
 kbl(q) %&gt;%
    kable_styling(bootstrap_options = c(&quot;responsive&quot;))</code></pre>
 <table class="table table-responsive" style="margin-left: auto; margin-right: auto;">
@@ -400,16 +401,16 @@ Iceland
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>q$countries &lt;- factor(q$countries, levels = q$countries[order(q$deaths)])
-
-z &lt;- ggplot(data = q, mapping = aes(x = deaths, y = countries)) +
+<pre class="r"><code>q$countries &lt;- factor(q$countries, levels = q$countries[order(q$deaths)])</code></pre>
+<p>Step 4) The same data is displayed in a bar plot.</p>
+<pre class="r"><code>z &lt;- ggplot(data = q, mapping = aes(x = deaths, y = countries)) +
   geom_bar(stat=&#39;identity&#39;) +
   theme_light() +
   theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;)) +
   scale_x_continuous(name = &quot;Cumulative deaths&quot;, labels = comma)
 
 z</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" />
  </p>
 </div>
 <div id="deaths-per-million-people" class="section level2">
@@ -433,7 +434,7 @@ z &lt;- ggplot(data = q, mapping = aes(x = deaths_pm, y = countries)) +
 
 #show the plot
 z</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" />
  </p>
 </div>
 <div id="deaths-per-million-people-as-a-function-of-per-capita-gdp" class="section level2">
@@ -463,7 +464,7 @@ t = ggplot(data = q, mapping = aes(x = gdp_pp, y = deaths_pm)) +
   theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;))
 
 t </code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.png" width="672" />
  </p>
 </div>
 <div id="linear-regression" class="section level2">
@@ -510,7 +511,7 @@ u &lt;- t +
   geom_smooth(method=&#39;lm&#39;, formula= y~x, se = FALSE)
 
 u</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code>#perform linear regression without plotting
 m &lt;- lm(deaths_pm ~ gdp_pp, # How does deaths_pm depend on (~) gdp_pp
         data = q) # Look in &quot;q&quot; for the variables
@@ -545,7 +546,7 @@ ggplot() +
   theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;),
 plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;)) +
   ggtitle(&quot;Q-q plot&quot;) </code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-2.png" width="672" />
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-2.png" width="672" />
  </p>
 </div>
 <div id="comments-on-the-line-of-best-fit" class="section level2">
@@ -633,7 +634,7 @@ u &lt;- t +
   geom_smooth(method=&#39;lm&#39;, formula= y~x, se = FALSE)
 
 print(u)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>#calculate and extract regression statistics summary
 m &lt;- lm(deaths_pm ~ press, # How does deaths_pm depend on (~) the 2021 press freedom score
          data = q) # Look in &quot;q&quot; for the variables
@@ -668,7 +669,7 @@ pl &lt;- ggplot() +
   ggtitle(&quot;Q-q plot&quot;) 
 
 plot(pl)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
 <div id="comments-on-the-line-of-best-fit-1" class="section level2">
 <h2>Comments on the line of best fit</h2>
 <div id="the-line-of-best-fit-1" class="section level4">

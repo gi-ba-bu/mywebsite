@@ -2,7 +2,7 @@
 title: R for Data Science
 summary: Data wrangling
 author: 'Giacomo Baldo'
-date: '2021-08-30'
+date: '2021-08-31' 
 slug: ''
 categories: ["R"]
 tags: ["R", "Data Science", "Data wrangling", "pivot_wider()"]

@@ -21,9 +21,11 @@ design:
 
 ---
 
-My name is **Giacomo**.  
+My name is **Giacomo**.
 
-Last thing first, I earned my PhD from the [School of Mathematics](https://eps.leeds.ac.uk/maths-research-innovation) at the University of Leeds (UK) in 2021. In my [research](https://etheses.whiterose.ac.uk/28836/), I was interested in analytical modelling of group behavior. Among my current interests are data science and mathematics communication. I am also a qualified secondary school teacher in the UK and former mathematics teacher.
+I earned my PhD from the [School of Mathematics](https://eps.leeds.ac.uk/maths-research-innovation) at the University of Leeds (UK) in 2021. In my [research](https://etheses.whiterose.ac.uk/28836/), I was interested in analytical modelling of group behavior. Among my current interests are data science and mathematics communication. I am also a qualified secondary school teacher in the UK and former mathematics teacher.
+
+In this website you will find notes on different data science tools. I aim to make every bit, however simple, documented and reproducible.  
 
 <!--- [Explore similar templates](https://wowchemy.com/templates/)
 

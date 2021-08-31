@@ -1,5 +1,5 @@
 ---
-title: Hello
+title: Intro
 summary: Getting started
 author: 'Giacomo Baldo'
 date: '2021-08-05'
@@ -19,5 +19,13 @@ pre {
 }
 </style>
 
-This is my first post. I'll use it to thank the R-markdown community mission that has made the theme and framework to develop this website open source.
+I decided to create a website for fun and, slowly, this website is taking shape. 
+
+I started with an open source theme provided by Wowchemy. 
+
+I have customized the theme a bit using CSS and HTML code.
+
+The projects section hosts my notes about different data science topics. For example, a cool R package is a tool. 
+
+Again, I am doing this just for fun.
 
