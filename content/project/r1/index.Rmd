@@ -335,8 +335,6 @@ When the resulting q-q plot follows a straight line, as it roughly does in our c
 
 The value for R squared is 0.5552 (0.5359 when adjusted). As rule of thumb, this implies that just over 50% of the variance of the dependent variable (deaths) is explained by the dependent variable (press freedom score) alone.  
 
-
-
 ## Comments
 All statistical predictors tell us that press freedom is a slightly more robust predictor of deaths due to Covid than per-capita GDP. Technically, this is due to a lower p-value, lower standard residual error, higher R-squared coefficient and higher value for the F-statistic. 
 
