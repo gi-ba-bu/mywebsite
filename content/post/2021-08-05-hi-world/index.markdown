@@ -25,7 +25,7 @@ I started with an open source theme provided by Wowchemy.
 
 I have customized the theme a bit using CSS and HTML code.
 
-The projects section hosts my notes about different data science topics. For example, a cool R package is a tool. 
+The projects section hosts my little data science projects, or just some notes on interesting tools and softaware packages.
 
 Again, I am doing this just for fun.
 
