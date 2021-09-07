@@ -25,7 +25,4 @@ I started with an open source theme provided by Wowchemy.
 
 I have customized the theme a bit using CSS and HTML code.
 
-The projects section hosts my little data science projects, or just some notes on interesting tools and softaware packages.
-
-Again, I am doing this just for fun.
-
+The [projects]({{< relref "/project" >}}) section hosts my tentative data science projects, or just some notes on interesting tools and software packages.
