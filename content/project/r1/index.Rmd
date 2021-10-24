@@ -80,7 +80,7 @@ z <- ggplot(data = q, mapping = aes(x = deaths, y = countries)) +
   geom_bar(stat='identity') +
   theme_light() +
   theme(panel.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"), plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA")) +
-  scale_x_continuous(name = "Cumulative deaths", labels = comma)
+  scale_x_continuous(name = "Cumulative deaths", labels = comma) 
 
 z
 ```

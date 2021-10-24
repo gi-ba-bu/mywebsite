@@ -14,6 +14,7 @@ output:
   blogdown::html_page:
     df_print: kable  #kable, tibble, and paged are also options
 ---
+
 # <mark> What is air pollution?</mark>
 
 **When talking about air pollution, scientists refer to particles of solid, liquid and certain gases that are trapped in the air. ** 
@@ -53,21 +54,18 @@ q1 <- kbl(data_long) %>%
             kable_styling(bootstrap_options = c("responsive"))
 
 q1
-```
+``` 
 
 ```{r}
 
-data_long$Transport_type <- factor(data_long$Transport_type, levels=c("Total","Passenger.road.vehicles", "Road.freight.vehicles", "Aviation", "Shipping", "Other","Rail" ))
+data_long$Transport_type <- factor(data_long$Transport_type, levels=c("Total","Passenger.road.vehicles", "Road.freight.vehicles", "Aviation", "Shipping", "Other","Rail" ), labels = c("Total","Psngr.road.veh.", "Road.freight.veh.", "Aviation", "Shipping", "Other","Rail" ) )
 
 ggplot(data=data_long,  
         aes(x=Year, y= Emissions, colour=Transport_type)) +
         geom_line()+
-  theme(axis.text.x=element_text(size = 36))+ 
-  theme(legend.text = element_text(size = 36),
-    legend.title = element_text(size = 36))+
-   theme_light() +
+   theme_light(base_size = 18) +
    theme(panel.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA"), plot.background = element_rect(fill = "#F8F9FA", colour = "#F8F9FA")) +
-   scale_y_continuous(name = "Gigatons greenhouse gases", labels = comma) 
+   scale_y_continuous(name = "Greenhouse gases (Gigatons)", labels = comma) 
  ```
  
 

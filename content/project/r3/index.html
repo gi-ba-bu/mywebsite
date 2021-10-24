@@ -2050,17 +2050,14 @@ Total
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>data_long$Transport_type &lt;- factor(data_long$Transport_type, levels=c(&quot;Total&quot;,&quot;Passenger.road.vehicles&quot;, &quot;Road.freight.vehicles&quot;, &quot;Aviation&quot;, &quot;Shipping&quot;, &quot;Other&quot;,&quot;Rail&quot; ))
+<pre class="r"><code>data_long$Transport_type &lt;- factor(data_long$Transport_type, levels=c(&quot;Total&quot;,&quot;Passenger.road.vehicles&quot;, &quot;Road.freight.vehicles&quot;, &quot;Aviation&quot;, &quot;Shipping&quot;, &quot;Other&quot;,&quot;Rail&quot; ), labels = c(&quot;Total&quot;,&quot;Psngr.road.veh.&quot;, &quot;Road.freight.veh.&quot;, &quot;Aviation&quot;, &quot;Shipping&quot;, &quot;Other&quot;,&quot;Rail&quot; ) )
 
 ggplot(data=data_long,  
         aes(x=Year, y= Emissions, colour=Transport_type)) +
         geom_line()+
-  theme(axis.text.x=element_text(size = 36))+ 
-  theme(legend.text = element_text(size = 36),
-    legend.title = element_text(size = 36))+
-   theme_light() +
+   theme_light(base_size = 18) +
    theme(panel.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;), plot.background = element_rect(fill = &quot;#F8F9FA&quot;, colour = &quot;#F8F9FA&quot;)) +
-   scale_y_continuous(name = &quot;Gigatons greenhouse gases&quot;, labels = comma) </code></pre>
+   scale_y_continuous(name = &quot;Greenhouse gases (Gigatons)&quot;, labels = comma) </code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <!-- **Step 3)** Create and display a data set made of less information, recording only date, country and deaths. -->
 <!-- ```{r} -->
